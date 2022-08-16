@@ -1,5 +1,5 @@
 export interface Todo {
   isDone: boolean;
-  header: string;
+  title: string;
   description: string;
 }
