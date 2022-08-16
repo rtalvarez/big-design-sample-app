@@ -1,20 +1,13 @@
 import { GlobalStyles } from '@bigcommerce/big-design';
 import { theme } from '@bigcommerce/big-design-theme';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import { AlertsManager, AppGlobalStyles } from './components';
+import { queryClient } from './queryClient';
 import { TodosPage } from './TodosPage';
-
-const client = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
-});
 
 function App() {
   return (
@@ -23,7 +16,7 @@ function App() {
       <AppGlobalStyles />
       <AlertsManager />
 
-      <QueryClientProvider client={client}>
+      <QueryClientProvider client={queryClient}>
         <BrowserRouter basename="/">
           <Routes>
             <Route element={<TodosPage />} index />

@@ -9,15 +9,19 @@ import React from 'react';
 
 import { PageLayout } from '../components';
 
+import { useCompleteTodo } from './useCompleteTodo';
+import { useDeleteTodo } from './useDeleteTodo';
 import { useTodos } from './useTodos';
 
 export const TodosPage: React.FC = () => {
   const { data } = useTodos();
+  const { mutateAsync: deleteTodo } = useDeleteTodo();
+  const { mutateAsync: completeTodo } = useCompleteTodo();
 
   return (
     <PageLayout>
       <H1>Big Design To-do list app</H1>
-      <Panel header="Things to do">
+      <Panel action={{ text: 'Add' }} header="Things to do">
         <Table
           columns={[
             {
@@ -35,18 +39,23 @@ export const TodosPage: React.FC = () => {
             {
               header: 'Actions',
               hash: 'actions',
-              render: () => (
+              render: ({ id, isDone }) => (
                 <Dropdown
                   items={[
                     {
                       content: 'Done',
-                      onItemClick: () => console.log('complete'),
+                      onItemClick: () => {
+                        void completeTodo(id);
+                      },
                       hash: 'done',
                       icon: <CheckCircleIcon />,
+                      disabled: isDone,
                     },
                     {
                       content: 'Delete',
-                      onItemClick: (item) => item,
+                      onItemClick: () => {
+                        void deleteTodo(id);
+                      },
                       hash: 'delete',
                       icon: <DeleteIcon />,
                       actionType: 'destructive',
