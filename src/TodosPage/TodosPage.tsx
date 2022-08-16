@@ -5,23 +5,38 @@ import {
   ErrorIcon,
   MoreHorizIcon,
 } from '@bigcommerce/big-design-icons';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { PageLayout } from '../components';
 
+import { TodoModal } from './TodoModal';
 import { useCompleteTodo } from './useCompleteTodo';
 import { useDeleteTodo } from './useDeleteTodo';
+import { usePostTodo } from './usePostTodo';
 import { useTodos } from './useTodos';
 
 export const TodosPage: React.FC = () => {
   const { data } = useTodos();
   const { mutateAsync: deleteTodo } = useDeleteTodo();
   const { mutateAsync: completeTodo } = useCompleteTodo();
+  const { mutateAsync: postTodo } = usePostTodo();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const saveTodo = ({ title, description }: { title: string; description: string }) => {
+    const newTodo = {
+      isDone: false,
+      title,
+      description,
+    };
+
+    void postTodo(newTodo);
+    setIsOpen(false);
+  };
 
   return (
     <PageLayout>
       <H1>Big Design To-do list app</H1>
-      <Panel action={{ text: 'Add' }} header="Things to do">
+      <Panel action={{ text: 'Add', onClick: () => setIsOpen(true) }} header="Things to do">
         <Table
           columns={[
             {
@@ -69,6 +84,7 @@ export const TodosPage: React.FC = () => {
           items={data || []}
         />
       </Panel>
+      <TodoModal cancel={() => setIsOpen(false)} isOpen={isOpen} save={saveTodo} />
     </PageLayout>
   );
 };
