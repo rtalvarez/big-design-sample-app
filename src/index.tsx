@@ -5,6 +5,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line global-require
+  require('./mocks/browser');
+}
+
 const rootElement = document.getElementById('root');
 const root = rootElement ? ReactDOM.createRoot(rootElement) : null;
 
